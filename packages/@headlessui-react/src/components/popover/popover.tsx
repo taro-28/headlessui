@@ -52,7 +52,9 @@ import {
   FocusableMode,
   focusIn,
   getFocusableElements,
+  getTabbableElements,
   isFocusableElement,
+  tabIn,
 } from '../../utils/focus-management'
 import { match } from '../../utils/match'
 import { microTask } from '../../utils/micro-task'
@@ -285,7 +287,7 @@ function PopoverFn<TTag extends ElementType = typeof DEFAULT_POPOVER_TAG>(
     // doesn't really matter if they are portalled or not because we can follow the default tab
     // order. But if they are not, then we can consider it being portalled so that we can ensure
     // that tab and shift+tab (hopefully) go to the correct spot.
-    let elements = getFocusableElements()
+    let elements = getTabbableElements()
     let buttonIdx = elements.indexOf(button)
 
     let beforeIdx = (buttonIdx + elements.length - 1) % elements.length
@@ -655,8 +657,8 @@ function ButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
 
     function run() {
       let result = match(direction.current, {
-        [TabDirection.Forwards]: () => focusIn(el, Focus.First),
-        [TabDirection.Backwards]: () => focusIn(el, Focus.Last),
+        [TabDirection.Forwards]: () => tabIn(el, Focus.First),
+        [TabDirection.Backwards]: () => tabIn(el, Focus.Last),
       })
 
       if (result === FocusResult.Error) {
@@ -926,7 +928,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
         [TabDirection.Forwards]: () => {
           // Try to focus the first thing in the panel. But if that fails (e.g.: there are no
           // focusable elements, then we can move outside of the panel)
-          let result = focusIn(el, Focus.First)
+          let result = tabIn(el, Focus.First)
           if (result === FocusResult.Error) {
             state.afterPanelSentinel.current?.focus()
           }
@@ -956,7 +958,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
         [TabDirection.Forwards]: () => {
           if (!state.button) return
 
-          let elements = getFocusableElements()
+          let elements = getTabbableElements()
 
           let idx = elements.indexOf(state.button)
           let before = elements.slice(0, idx + 1)
@@ -972,12 +974,12 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
             }
           }
 
-          focusIn(combined, Focus.First, { sorted: false })
+          tabIn(combined, Focus.First, { sorted: false })
         },
         [TabDirection.Backwards]: () => {
           // Try to focus the first thing in the panel. But if that fails (e.g.: there are no
           // focusable elements, then we can move outside of the panel)
-          let result = focusIn(el, Focus.Previous)
+          let result = tabIn(el, Focus.Previous)
           if (result === FocusResult.Error) {
             state.button?.focus()
           }

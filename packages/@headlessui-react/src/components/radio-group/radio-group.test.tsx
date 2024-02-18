@@ -2,9 +2,9 @@ import { render } from '@testing-library/react'
 import React, { createElement, useState } from 'react'
 import {
   assertActiveElement,
-  assertFocusable,
-  assertNotFocusable,
+  assertNotTabbable,
   assertRadioGroupLabel,
+  assertTabbable,
   getByText,
   getRadioGroupOptions,
 } from '../../test-utils/accessibility-assertions'
@@ -67,9 +67,9 @@ describe('Rendering', () => {
 
       expect(getRadioGroupOptions()).toHaveLength(3)
 
-      assertFocusable(getByText('Pickup'))
-      assertNotFocusable(getByText('Home delivery'))
-      assertNotFocusable(getByText('Dine in'))
+      assertTabbable(getByText('Pickup'))
+      assertNotTabbable(getByText('Home delivery'))
+      assertNotTabbable(getByText('Dine in'))
     })
   )
 
@@ -87,9 +87,9 @@ describe('Rendering', () => {
 
       expect(getRadioGroupOptions()).toHaveLength(3)
 
-      assertFocusable(getByText('Pickup'))
-      assertNotFocusable(getByText('Home delivery'))
-      assertNotFocusable(getByText('Dine in'))
+      assertTabbable(getByText('Pickup'))
+      assertNotTabbable(getByText('Home delivery'))
+      assertNotTabbable(getByText('Dine in'))
     })
   )
 
@@ -107,9 +107,9 @@ describe('Rendering', () => {
 
       expect(getRadioGroupOptions()).toHaveLength(3)
 
-      assertNotFocusable(getByText('Pickup'))
-      assertFocusable(getByText('Home delivery'))
-      assertNotFocusable(getByText('Dine in'))
+      assertNotTabbable(getByText('Pickup'))
+      assertTabbable(getByText('Home delivery'))
+      assertNotTabbable(getByText('Dine in'))
     })
   )
 
