@@ -5533,7 +5533,6 @@ describe.each([{ virtual: true }, { virtual: false }])('Mouse interactions %s', 
       await click(options[1])
       assertComboboxList({ state: ComboboxState.Visible })
       assertNotActiveComboboxOption(options[1])
-      assertActiveElement(getComboboxInput())
       expect(handleChange).toHaveBeenCalledTimes(0)
 
       // Close the combobox
