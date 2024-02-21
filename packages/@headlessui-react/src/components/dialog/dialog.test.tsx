@@ -291,6 +291,9 @@ describe('Rendering', () => {
 
       await nextFrame()
 
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+
       // Let's verify that the Dialog is already there
       expect(getDialog()).not.toBe(null)
       expect(focusCounter).toHaveBeenCalledTimes(1)
@@ -804,6 +807,10 @@ describe('Composition', () => {
       // The dialog should be open but the popover should not
       assertPopoverPanel({ state: PopoverState.InvisibleUnmounted })
       assertDialog({ state: DialogState.Visible })
+
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+
       assertActiveElement(document.getElementById('closeDialog'))
 
       // Close the dialog from inside itself
@@ -973,6 +980,10 @@ describe('Keyboard interactions', () => {
           attributes: { id: 'headlessui-dialog-1' },
         })
 
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+
         // Try to close the dialog
         await press(Keys.Escape)
 
@@ -1070,19 +1081,39 @@ describe('Keyboard interactions', () => {
           attributes: { id: 'headlessui-dialog-1' },
         })
 
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+
         // Verify that the input field is focused
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
       })
     )
@@ -1121,18 +1152,29 @@ describe('Keyboard interactions', () => {
         })
 
         // Verify that the input field is focused
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(shift(Keys.Tab))
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(shift(Keys.Tab))
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(shift(Keys.Tab))
+        await press(Keys.Tab)
+
         assertActiveElement(document.getElementById('a'))
       })
     )
@@ -1527,6 +1569,8 @@ describe('Mouse interactions', () => {
       // the dialog again.
       assertActiveElement(document.querySelector('[data-lib]'))
 
+      await press(Keys.Tab)
+
       // This should only have been called once (when opening the Dialog)
       expect(handleFocus).toHaveBeenCalledTimes(1)
 
@@ -1876,6 +1920,10 @@ describe('Nesting', () => {
       // Verify that we have 1 open dialog
       expect(getDialogs()).toHaveLength(1)
 
+      await press(Keys.Tab)
+
+      await press(Keys.Tab)
+
       // Verify that the `Open 2 a` has focus
       assertActiveElement(getByText('Open 2 a'))
 
@@ -1896,6 +1944,12 @@ describe('Nesting', () => {
 
       // Verify that we have 2 open dialogs
       expect(getDialogs()).toHaveLength(2)
+
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
 
       // Verify that the `Open 3 a` has focus
       assertActiveElement(getByText('Open 3 a'))
@@ -1936,6 +1990,12 @@ describe('Nesting', () => {
       // Open Dialog 2 via button b
       await click(getByText('Open 2 b'))
 
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+
       // Verify that the `Open 3 a` has focus
       assertActiveElement(getByText('Open 3 a'))
 
@@ -1956,6 +2016,15 @@ describe('Nesting', () => {
 
       // Open Dialog 3 via button c
       await click(getByText('Open 3 c'))
+
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
+      await press(Keys.Tab)
 
       // Verify that the `Open 4 a` has focus
       assertActiveElement(getByText('Open 4 a'))
