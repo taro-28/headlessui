@@ -50,8 +50,6 @@ import {
   Focus,
   FocusResult,
   FocusableMode,
-  focusIn,
-  getFocusableElements,
   getTabbableElements,
   isFocusableElement,
   tabIn,
@@ -662,8 +660,8 @@ function ButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
       })
 
       if (result === FocusResult.Error) {
-        focusIn(
-          getFocusableElements().filter((el) => el.dataset.headlessuiFocusGuard !== 'true'),
+        tabIn(
+          getTabbableElements().filter((el) => el.dataset.headlessuiFocusGuard !== 'true'),
           match(direction.current, {
             [TabDirection.Forwards]: Focus.Next,
             [TabDirection.Backwards]: Focus.Previous,
@@ -884,7 +882,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
     let activeElement = ownerDocument?.activeElement as HTMLElement
     if (internalPanelRef.current.contains(activeElement)) return // Already focused within Dialog
 
-    focusIn(internalPanelRef.current, Focus.First)
+    tabIn(internalPanelRef.current, Focus.First)
   }, [state.__demoMode, focus, internalPanelRef, state.popoverState])
 
   let slot = useMemo(
