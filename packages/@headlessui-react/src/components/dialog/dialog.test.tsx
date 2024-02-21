@@ -974,9 +974,7 @@ describe('Keyboard interactions', () => {
           attributes: { id: 'headlessui-dialog-1' },
         })
 
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
+        await click(document.getElementById('name'))
 
         // Try to close the dialog
         await press(Keys.Escape)
