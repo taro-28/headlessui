@@ -132,7 +132,7 @@ let order: Record<
       return fireEvent.keyDown(element, event)
     },
     function blurAndfocus(_element, event) {
-      return focusNext(event)
+      return tabNext(event)
     },
     function keyup(element, event) {
       return fireEvent.keyUp(element, event)
@@ -445,22 +445,22 @@ export async function mouseDrag(
 
 // ---
 
-function focusNext(event: Partial<KeyboardEvent>) {
+function tabNext(event: Partial<KeyboardEvent>) {
   let direction = event.shiftKey ? -1 : +1
   let tabbableElements = getTabbableElements()
   let total = tabbableElements.length
 
-  function innerFocusNext(offset = 0): Element {
+  function innerTabNext(offset = 0): Element {
     let currentIdx = tabbableElements.indexOf(document.activeElement as HTMLElement)
     let next = tabbableElements[(currentIdx + total + direction + offset) % total] as HTMLElement
 
     if (next) next?.focus({ preventScroll: true })
 
-    if (next !== document.activeElement) return innerFocusNext(offset + direction)
+    if (next !== document.activeElement) return innerTabNext(offset + direction)
     return next
   }
 
-  return innerFocusNext()
+  return innerTabNext()
 }
 
 // Credit:
