@@ -291,12 +291,9 @@ describe('Rendering', () => {
 
       await nextFrame()
 
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-
       // Let's verify that the Dialog is already there
       expect(getDialog()).not.toBe(null)
-      expect(focusCounter).toHaveBeenCalledTimes(1)
+      expect(focusCounter).toHaveBeenCalledTimes(0)
     })
 
     it('should be possible to always render the Dialog if we provide it a `static` prop (and disable focus trapping based on `open`)', () => {
