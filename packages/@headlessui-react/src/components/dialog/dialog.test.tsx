@@ -770,7 +770,7 @@ describe('Composition', () => {
               </Popover.Panel>
             </Popover>
 
-            <Dialog autoFocus={false} open={isDialogOpen} onClose={console.log}>
+            <Dialog autoFocus={false} open={isDialogOpen} onClose={console.log} id="dialog">
               <Dialog.Panel>
                 <button id="closeDialog" onClick={() => setIsDialogOpen(false)}>
                   Close Dialog
@@ -805,10 +805,7 @@ describe('Composition', () => {
       assertPopoverPanel({ state: PopoverState.InvisibleUnmounted })
       assertDialog({ state: DialogState.Visible })
 
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-
-      assertActiveElement(document.getElementById('closeDialog'))
+      assertActiveElement(document.getElementById('dialog'))
 
       // Close the dialog from inside itself
       await click(document.getElementById('closeDialog'))
