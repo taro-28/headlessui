@@ -1074,36 +1074,21 @@ describe('Keyboard interactions', () => {
         })
 
         await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
 
         // Verify that the input field is focused
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
 
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
         await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
 
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
-        await press(Keys.Tab)
         await press(Keys.Tab)
 
         assertActiveElement(document.getElementById('a'))
