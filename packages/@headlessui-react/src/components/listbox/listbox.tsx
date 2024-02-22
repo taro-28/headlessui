@@ -546,7 +546,7 @@ function ListboxFn<
     (event, target) => {
       dispatch({ type: ActionTypes.CloseListbox })
 
-      if (!isFocusableElement(target, FocusableMode.Loose)) {
+      if (!isFocusableElement(target, FocusableMode.Loose, { includeNegativeTabIndex: true })) {
         event.preventDefault()
         data.buttonRef.current?.focus()
       }

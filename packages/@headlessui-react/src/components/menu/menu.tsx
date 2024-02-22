@@ -387,7 +387,7 @@ function MenuFn<TTag extends ElementType = typeof DEFAULT_MENU_TAG>(
     (event, target) => {
       dispatch({ type: ActionTypes.CloseMenu })
 
-      if (!isFocusableElement(target, FocusableMode.Loose)) {
+      if (!isFocusableElement(target, FocusableMode.Loose, { includeNegativeTabIndex: true })) {
         event.preventDefault()
         buttonRef.current?.focus()
       }

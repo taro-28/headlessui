@@ -89,7 +89,7 @@ export function useOutsideClick(
       // button or an input. This is a backwards compatibility check so that you can open a <Menu
       // /> and click on another <Menu /> which should close Menu A and open Menu B. We might
       // revisit that so that you will require 2 clicks instead.
-      !isFocusableElement(target, FocusableMode.Loose) &&
+      !isFocusableElement(target, FocusableMode.Loose, { includeNegativeTabIndex: true }) &&
       // This could be improved, but the `Combobox.Button` adds tabIndex={-1} to make it
       // unfocusable via the keyboard so that tabbing to the next item from the input doesn't
       // first go to the button.

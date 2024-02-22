@@ -1,4 +1,4 @@
-import { TabbableMode, isTabbableElement } from '../utils/focus-management'
+import { FocusableMode, isFocusableElement } from '../utils/focus-management'
 
 function assertNever(x: never): never {
   throw new Error('Unexpected object: ' + x)
@@ -1921,24 +1921,24 @@ export function assertVisible(element: HTMLElement | null) {
 
 // ---
 
-export function assertTabbable(element: HTMLElement | null) {
+export function assertFocusable(element: HTMLElement | null) {
   try {
     if (element === null) return expect(element).not.toBe(null)
 
-    expect(isTabbableElement(element, TabbableMode.Strict)).toBe(true)
+    expect(isFocusableElement(element, FocusableMode.Strict)).toBe(true)
   } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, assertTabbable)
+    if (err instanceof Error) Error.captureStackTrace(err, assertFocusable)
     throw err
   }
 }
 
-export function assertNotTabbable(element: HTMLElement | null) {
+export function assertNotFocusable(element: HTMLElement | null) {
   try {
     if (element === null) return expect(element).not.toBe(null)
 
-    expect(isTabbableElement(element, TabbableMode.Strict)).toBe(false)
+    expect(isFocusableElement(element, FocusableMode.Strict)).toBe(false)
   } catch (err) {
-    if (err instanceof Error) Error.captureStackTrace(err, assertNotTabbable)
+    if (err instanceof Error) Error.captureStackTrace(err, assertNotFocusable)
     throw err
   }
 }

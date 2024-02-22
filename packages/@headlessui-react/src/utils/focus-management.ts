@@ -130,35 +130,18 @@ export enum TabbableMode {
 // OK
 export function isFocusableElement(
   element: HTMLElement,
-  mode: FocusableMode = FocusableMode.Strict
+  mode: FocusableMode = FocusableMode.Strict,
+  { includeNegativeTabIndex }: Partial<{ includeNegativeTabIndex: boolean }> = {
+    includeNegativeTabIndex: false,
+  }
 ) {
   if (element === getOwnerDocument(element)?.body) return false
 
   return match(mode, {
     [FocusableMode.Strict]() {
-      return element.matches(focusableSelector)
+      return element.matches(includeNegativeTabIndex ? focusableSelector : tabbableSelector)
     },
     [FocusableMode.Loose]() {
-      let next: HTMLElement | null = element
-
-      while (next !== null) {
-        if (next.matches(focusableSelector)) return true
-        next = next.parentElement
-      }
-
-      return false
-    },
-  })
-}
-
-export function isTabbableElement(element: HTMLElement, mode: TabbableMode = TabbableMode.Strict) {
-  if (element === getOwnerDocument(element)?.body) return false
-
-  return match(mode, {
-    [TabbableMode.Strict]() {
-      return element.matches(tabbableSelector)
-    },
-    [TabbableMode.Loose]() {
       let next: HTMLElement | null = element
 
       while (next !== null) {
