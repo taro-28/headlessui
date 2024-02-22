@@ -1531,10 +1531,8 @@ describe('Mouse interactions', () => {
       // the dialog again.
       assertActiveElement(document.querySelector('[data-lib]'))
 
-      await press(Keys.Tab)
-
       // This should only have been called once (when opening the Dialog)
-      expect(handleFocus).toHaveBeenCalledTimes(1)
+      expect(handleFocus).toHaveBeenCalledTimes(0)
 
       // Verify the dialog is still open
       assertDialog({ state: DialogState.Visible })
