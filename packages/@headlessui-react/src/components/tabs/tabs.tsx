@@ -25,7 +25,7 @@ import { useSyncRefs } from '../../hooks/use-sync-refs'
 import { FocusSentinel } from '../../internal/focus-sentinel'
 import { Hidden } from '../../internal/hidden'
 import type { Props } from '../../types'
-import { Focus, FocusResult, sortByDomNode, tabIn } from '../../utils/focus-management'
+import { Focus, FocusResult, focusIn, sortByDomNode } from '../../utils/focus-management'
 import { match } from '../../utils/match'
 import { microTask } from '../../utils/micro-task'
 import { getOwnerDocument } from '../../utils/owner'
@@ -451,26 +451,26 @@ function TabFn<TTag extends ElementType = typeof DEFAULT_TAB_TAG>(
         event.preventDefault()
         event.stopPropagation()
 
-        return activateUsing(() => tabIn(list, Focus.First))
+        return activateUsing(() => focusIn(list, Focus.First))
 
       case Keys.End:
       case Keys.PageDown:
         event.preventDefault()
         event.stopPropagation()
 
-        return activateUsing(() => tabIn(list, Focus.Last))
+        return activateUsing(() => focusIn(list, Focus.Last))
     }
 
     let result = activateUsing(() => {
       return match(orientation, {
         vertical() {
-          if (event.key === Keys.ArrowUp) return tabIn(list, Focus.Previous | Focus.WrapAround)
-          if (event.key === Keys.ArrowDown) return tabIn(list, Focus.Next | Focus.WrapAround)
+          if (event.key === Keys.ArrowUp) return focusIn(list, Focus.Previous | Focus.WrapAround)
+          if (event.key === Keys.ArrowDown) return focusIn(list, Focus.Next | Focus.WrapAround)
           return FocusResult.Error
         },
         horizontal() {
-          if (event.key === Keys.ArrowLeft) return tabIn(list, Focus.Previous | Focus.WrapAround)
-          if (event.key === Keys.ArrowRight) return tabIn(list, Focus.Next | Focus.WrapAround)
+          if (event.key === Keys.ArrowLeft) return focusIn(list, Focus.Previous | Focus.WrapAround)
+          if (event.key === Keys.ArrowRight) return focusIn(list, Focus.Next | Focus.WrapAround)
           return FocusResult.Error
         },
       })

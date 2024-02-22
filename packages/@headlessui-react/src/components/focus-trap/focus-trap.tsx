@@ -20,7 +20,7 @@ import { useWatch } from '../../hooks/use-watch'
 import { Hidden, HiddenFeatures } from '../../internal/hidden'
 import type { Props } from '../../types'
 import { history } from '../../utils/active-element-history'
-import { Focus, FocusResult, focusElement, focusIn, tabIn } from '../../utils/focus-management'
+import { Focus, FocusResult, focusElement, focusIn } from '../../utils/focus-management'
 import { match } from '../../utils/match'
 import { microTask } from '../../utils/micro-task'
 import { forwardRefWithAs, render, type HasDisplayName, type RefProp } from '../../utils/render'
@@ -129,12 +129,12 @@ function FocusTrapFn<TTag extends ElementType = typeof DEFAULT_FOCUS_TRAP_TAG>(
     wrapper(() => {
       match(direction.current, {
         [TabDirection.Forwards]: () => {
-          tabIn(el, Focus.First, {
+          focusIn(el, Focus.First, {
             skipElements: [e.relatedTarget, initialFocusFallback] as HTMLElement[],
           })
         },
         [TabDirection.Backwards]: () => {
-          tabIn(el, Focus.Last, {
+          focusIn(el, Focus.Last, {
             skipElements: [e.relatedTarget, initialFocusFallback] as HTMLElement[],
           })
         },
@@ -173,7 +173,7 @@ function FocusTrapFn<TTag extends ElementType = typeof DEFAULT_FOCUS_TRAP_TAG>(
       if (!contains(allContainers, relatedTarget)) {
         // Was the blur invoked via the keyboard? Redirect to the next in line.
         if (recentlyUsedTabKey.current) {
-          tabIn(
+          focusIn(
             container.current as HTMLElement,
             match(direction.current, {
               [TabDirection.Forwards]: () => Focus.Next,
@@ -357,13 +357,21 @@ function useInitialFocus(
       } else {
         if (features & FocusTrapFeatures.AutoFocus) {
           // Try to focus the first focusable element with `Focus.AutoFocus` feature enabled
-          if (focusIn(containerElement!, Focus.First | Focus.AutoFocus) !== FocusResult.Error) {
+          if (
+            focusIn(containerElement!, Focus.First | Focus.AutoFocus, {
+              skipNegativeTabIndex: false,
+            }) !== FocusResult.Error
+          ) {
             return // Worked, bail
           }
         }
 
         // Try to focus the first focusable element.
-        else if (focusIn(containerElement!, Focus.First) !== FocusResult.Error) {
+        else if (
+          focusIn(containerElement!, Focus.First, {
+            skipNegativeTabIndex: false,
+          }) !== FocusResult.Error
+        ) {
           return // Worked, bail
         }
 

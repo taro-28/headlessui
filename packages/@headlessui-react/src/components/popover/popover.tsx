@@ -50,9 +50,9 @@ import {
   Focus,
   FocusResult,
   FocusableMode,
+  focusIn,
   getTabbableElements,
   isFocusableElement,
-  tabIn,
 } from '../../utils/focus-management'
 import { match } from '../../utils/match'
 import { microTask } from '../../utils/micro-task'
@@ -655,12 +655,12 @@ function ButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
 
     function run() {
       let result = match(direction.current, {
-        [TabDirection.Forwards]: () => tabIn(el, Focus.First),
-        [TabDirection.Backwards]: () => tabIn(el, Focus.Last),
+        [TabDirection.Forwards]: () => focusIn(el, Focus.First),
+        [TabDirection.Backwards]: () => focusIn(el, Focus.Last),
       })
 
       if (result === FocusResult.Error) {
-        tabIn(
+        focusIn(
           getTabbableElements().filter((el) => el.dataset.headlessuiFocusGuard !== 'true'),
           match(direction.current, {
             [TabDirection.Forwards]: Focus.Next,
@@ -882,7 +882,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
     let activeElement = ownerDocument?.activeElement as HTMLElement
     if (internalPanelRef.current.contains(activeElement)) return // Already focused within Dialog
 
-    tabIn(internalPanelRef.current, Focus.First)
+    focusIn(internalPanelRef.current, Focus.First)
   }, [state.__demoMode, focus, internalPanelRef, state.popoverState])
 
   let slot = useMemo(
@@ -926,7 +926,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
         [TabDirection.Forwards]: () => {
           // Try to focus the first thing in the panel. But if that fails (e.g.: there are no
           // focusable elements, then we can move outside of the panel)
-          let result = tabIn(el, Focus.First)
+          let result = focusIn(el, Focus.First)
           if (result === FocusResult.Error) {
             state.afterPanelSentinel.current?.focus()
           }
@@ -972,12 +972,12 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
             }
           }
 
-          tabIn(combined, Focus.First, { sorted: false })
+          focusIn(combined, Focus.First, { sorted: false })
         },
         [TabDirection.Backwards]: () => {
           // Try to focus the first thing in the panel. But if that fails (e.g.: there are no
           // focusable elements, then we can move outside of the panel)
-          let result = tabIn(el, Focus.Previous)
+          let result = focusIn(el, Focus.Previous)
           if (result === FocusResult.Error) {
             state.button?.focus()
           }

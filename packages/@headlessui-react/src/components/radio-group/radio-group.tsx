@@ -27,7 +27,7 @@ import { FormFields } from '../../internal/form-fields'
 import { useProvidedId } from '../../internal/id'
 import type { Expand, Props } from '../../types'
 import { isDisabledReactIssue7711 } from '../../utils/bugs'
-import { Focus, FocusResult, sortByDomNode, tabIn } from '../../utils/focus-management'
+import { Focus, FocusResult, focusIn, sortByDomNode } from '../../utils/focus-management'
 import { attemptSubmit } from '../../utils/form'
 import { match } from '../../utils/match'
 import { getOwnerDocument } from '../../utils/owner'
@@ -236,7 +236,7 @@ function RadioGroupFn<TTag extends ElementType = typeof DEFAULT_RADIO_GROUP_TAG,
           event.preventDefault()
           event.stopPropagation()
 
-          let result = tabIn(all, Focus.Previous | Focus.WrapAround)
+          let result = focusIn(all, Focus.Previous | Focus.WrapAround)
 
           if (result === FocusResult.Success) {
             let activeOption = options.find(
@@ -253,7 +253,7 @@ function RadioGroupFn<TTag extends ElementType = typeof DEFAULT_RADIO_GROUP_TAG,
           event.preventDefault()
           event.stopPropagation()
 
-          let result = tabIn(all, Focus.Next | Focus.WrapAround)
+          let result = focusIn(all, Focus.Next | Focus.WrapAround)
 
           if (result === FocusResult.Success) {
             let activeOption = options.find(
