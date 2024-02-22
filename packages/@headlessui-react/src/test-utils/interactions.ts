@@ -447,15 +447,14 @@ export async function mouseDrag(
 
 function tabNext(event: Partial<KeyboardEvent>) {
   let direction = event.shiftKey ? -1 : +1
-  let tabbableElements = getTabbableElements()
-  let total = tabbableElements.length
+  let focusableElements = getFocusableElements()
+  let total = focusableElements.length
 
   function innerTabNext(offset = 0): Element {
-    let currentIdx = tabbableElements.indexOf(document.activeElement as HTMLElement)
-    let next = tabbableElements[(currentIdx + total + direction + offset) % total] as HTMLElement
+    let currentIdx = focusableElements.indexOf(document.activeElement as HTMLElement)
+    let next = focusableElements[(currentIdx + total + direction + offset) % total] as HTMLElement
 
-    if (next) next?.focus({ preventScroll: true })
-
+    if (next && getTabbableElements().includes(next)) next?.focus({ preventScroll: true })
     if (next !== document.activeElement) return innerTabNext(offset + direction)
     return next
   }
@@ -489,6 +488,11 @@ let focusableSelector = _focusableSelector.join(',')
 let tabbableSelector = _focusableSelector
   .map((selector) => `${selector}:not([tabindex='-1'])`)
   .join(',')
+
+function getFocusableElements(container = document.body) {
+  if (!container) return []
+  return Array.from(container.querySelectorAll(focusableSelector))
+}
 
 function getTabbableElements(container = document.body) {
   if (!container) return []
