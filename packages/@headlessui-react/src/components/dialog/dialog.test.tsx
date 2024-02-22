@@ -1880,11 +1880,8 @@ describe('Nesting', () => {
       // Verify that we have 1 open dialog
       expect(getDialogs()).toHaveLength(1)
 
-      await press(Keys.Tab)
-
-      await press(Keys.Tab)
-
       // Verify that the `Open 2 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 2 a'))
 
       // Verify that we can tab around
@@ -1905,13 +1902,8 @@ describe('Nesting', () => {
       // Verify that we have 2 open dialogs
       expect(getDialogs()).toHaveLength(2)
 
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-
       // Verify that the `Open 3 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 3 a'))
 
       // Verify that we can tab around
@@ -1950,13 +1942,8 @@ describe('Nesting', () => {
       // Open Dialog 2 via button b
       await click(getByText('Open 2 b'))
 
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-
       // Verify that the `Open 3 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 3 a'))
 
       // Verify that we can tab around
@@ -1977,16 +1964,8 @@ describe('Nesting', () => {
       // Open Dialog 3 via button c
       await click(getByText('Open 3 c'))
 
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-      await press(Keys.Tab)
-
       // Verify that the `Open 4 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 4 a'))
 
       // Verify that we can tab around
