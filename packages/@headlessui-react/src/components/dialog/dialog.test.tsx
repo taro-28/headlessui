@@ -804,7 +804,6 @@ describe('Composition', () => {
       // The dialog should be open but the popover should not
       assertPopoverPanel({ state: PopoverState.InvisibleUnmounted })
       assertDialog({ state: DialogState.Visible })
-
       assertActiveElement(document.getElementById('dialog'))
 
       // Close the dialog from inside itself
