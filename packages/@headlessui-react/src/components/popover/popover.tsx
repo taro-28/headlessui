@@ -51,7 +51,7 @@ import {
   FocusResult,
   FocusableMode,
   focusIn,
-  getTabbableElements,
+  getFocusableElements,
   isFocusableElement,
 } from '../../utils/focus-management'
 import { match } from '../../utils/match'
@@ -285,7 +285,7 @@ function PopoverFn<TTag extends ElementType = typeof DEFAULT_POPOVER_TAG>(
     // doesn't really matter if they are portalled or not because we can follow the default tab
     // order. But if they are not, then we can consider it being portalled so that we can ensure
     // that tab and shift+tab (hopefully) go to the correct spot.
-    let elements = getTabbableElements()
+    let elements = getFocusableElements()
     let buttonIdx = elements.indexOf(button)
 
     let beforeIdx = (buttonIdx + elements.length - 1) % elements.length
@@ -661,7 +661,7 @@ function ButtonFn<TTag extends ElementType = typeof DEFAULT_BUTTON_TAG>(
 
       if (result === FocusResult.Error) {
         focusIn(
-          getTabbableElements().filter((el) => el.dataset.headlessuiFocusGuard !== 'true'),
+          getFocusableElements().filter((el) => el.dataset.headlessuiFocusGuard !== 'true'),
           match(direction.current, {
             [TabDirection.Forwards]: Focus.Next,
             [TabDirection.Backwards]: Focus.Previous,
@@ -956,7 +956,7 @@ function PanelFn<TTag extends ElementType = typeof DEFAULT_PANEL_TAG>(
         [TabDirection.Forwards]: () => {
           if (!state.button) return
 
-          let elements = getTabbableElements()
+          let elements = getFocusableElements()
 
           let idx = elements.indexOf(state.button)
           let before = elements.slice(0, idx + 1)

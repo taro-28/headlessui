@@ -359,7 +359,7 @@ function useInitialFocus(
           // Try to focus the first focusable element with `Focus.AutoFocus` feature enabled
           if (
             focusIn(containerElement!, Focus.First | Focus.AutoFocus, {
-              skipNegativeTabIndex: false,
+              includeNegativeTabIndexElements: true,
             }) !== FocusResult.Error
           ) {
             return // Worked, bail
@@ -369,7 +369,7 @@ function useInitialFocus(
         // Try to focus the first focusable element.
         else if (
           focusIn(containerElement!, Focus.First, {
-            skipNegativeTabIndex: false,
+            includeNegativeTabIndexElements: true,
           }) !== FocusResult.Error
         ) {
           return // Worked, bail

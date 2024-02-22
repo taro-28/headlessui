@@ -86,18 +86,16 @@ enum Direction {
   Next = 1,
 }
 
-export function getFocusableElements(container: HTMLElement | null = document.body) {
+export function getFocusableElements(
+  container: HTMLElement | null = document.body,
+  includeNegativeTabIndex = false
+) {
   if (container == null) return []
-  return Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).sort(
-    // We want to move `tabIndex={0}` to the end of the list, this is what the browser does as well.
-    (a, z) =>
-      Math.sign((a.tabIndex || Number.MAX_SAFE_INTEGER) - (z.tabIndex || Number.MAX_SAFE_INTEGER))
-  )
-}
-
-export function getTabbableElements(container: HTMLElement | null = document.body) {
-  if (container == null) return []
-  return Array.from(container.querySelectorAll<HTMLElement>(tabbableSelector)).sort(
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      includeNegativeTabIndex ? focusableSelector : tabbableSelector
+    )
+  ).sort(
     // We want to move `tabIndex={0}` to the end of the list, this is what the browser does as well.
     (a, z) =>
       Math.sign((a.tabIndex || Number.MAX_SAFE_INTEGER) - (z.tabIndex || Number.MAX_SAFE_INTEGER))
@@ -258,7 +256,7 @@ export function sortByDomNode<T>(
 }
 
 export function focusFrom(current: HTMLElement | null, focus: Focus) {
-  return focusIn(getTabbableElements(), focus, { relativeTo: current })
+  return focusIn(getFocusableElements(), focus, { relativeTo: current })
 }
 
 export function focusIn(
@@ -268,12 +266,12 @@ export function focusIn(
     sorted = true,
     relativeTo = null,
     skipElements = [],
-    skipNegativeTabIndex = true,
+    includeNegativeTabIndexElements = false,
   }: Partial<{
     sorted: boolean
     relativeTo: HTMLElement | null
     skipElements: (HTMLElement | MutableRefObject<HTMLElement | null>)[]
-    skipNegativeTabIndex: boolean
+    includeNegativeTabIndexElements: boolean
   }> = {}
 ) {
   let ownerDocument = Array.isArray(container)
@@ -288,9 +286,7 @@ export function focusIn(
       : container
     : focus & Focus.AutoFocus
       ? getAutoFocusableElements(container)
-      : skipNegativeTabIndex
-        ? getTabbableElements(container)
-        : getFocusableElements(container)
+      : getFocusableElements(container, includeNegativeTabIndexElements)
 
   if (skipElements.length > 0 && elements.length > 1) {
     elements = elements.filter(
