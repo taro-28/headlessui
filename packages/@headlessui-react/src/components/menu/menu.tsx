@@ -51,10 +51,10 @@ import { disposables } from '../../utils/disposables'
 import {
   Focus as FocusManagementFocus,
   FocusableMode,
-  focusFrom,
   isFocusableElement,
   restoreFocusIfNecessary,
   sortByDomNode,
+  tabFrom,
 } from '../../utils/focus-management'
 import { match } from '../../utils/match'
 import {
@@ -700,7 +700,7 @@ function ItemsFn<TTag extends ElementType = typeof DEFAULT_ITEMS_TAG>(
         event.stopPropagation()
         dispatch({ type: ActionTypes.CloseMenu })
         disposables().microTask(() => {
-          focusFrom(
+          tabFrom(
             state.buttonRef.current!,
             event.shiftKey ? FocusManagementFocus.Previous : FocusManagementFocus.Next
           )

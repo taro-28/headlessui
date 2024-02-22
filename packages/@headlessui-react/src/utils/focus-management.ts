@@ -257,10 +257,6 @@ export function sortByDomNode<T>(
   })
 }
 
-export function focusFrom(current: HTMLElement | null, focus: Focus) {
-  return focusIn(getFocusableElements(), focus, { relativeTo: current })
-}
-
 export function focusIn(
   container: HTMLElement | HTMLElement[],
   focus: Focus,
@@ -358,6 +354,10 @@ export function focusIn(
   }
 
   return FocusResult.Success
+}
+
+export function tabFrom(current: HTMLElement | null, focus: Focus) {
+  return tabIn(getTabbableElements(), focus, { relativeTo: current })
 }
 
 export function tabIn(
