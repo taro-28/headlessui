@@ -770,7 +770,7 @@ describe('Composition', () => {
               </Popover.Panel>
             </Popover>
 
-            <Dialog autoFocus={false} open={isDialogOpen} onClose={console.log}>
+            <Dialog autoFocus={false} open={isDialogOpen} onClose={console.log} id="dialog">
               <Dialog.Panel>
                 <button id="closeDialog" onClick={() => setIsDialogOpen(false)}>
                   Close Dialog
