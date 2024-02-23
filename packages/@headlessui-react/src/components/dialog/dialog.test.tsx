@@ -293,7 +293,7 @@ describe('Rendering', () => {
 
       // Let's verify that the Dialog is already there
       expect(getDialog()).not.toBe(null)
-      expect(focusCounter).toHaveBeenCalledTimes(1)
+      expect(focusCounter).toHaveBeenCalledTimes(0)
     })
 
     it('should be possible to always render the Dialog if we provide it a `static` prop (and disable focus trapping based on `open`)', () => {
@@ -770,7 +770,7 @@ describe('Composition', () => {
               </Popover.Panel>
             </Popover>
 
-            <Dialog autoFocus={false} open={isDialogOpen} onClose={console.log}>
+            <Dialog autoFocus={false} open={isDialogOpen} onClose={console.log} id="dialog">
               <Dialog.Panel>
                 <button id="closeDialog" onClick={() => setIsDialogOpen(false)}>
                   Close Dialog
@@ -804,7 +804,7 @@ describe('Composition', () => {
       // The dialog should be open but the popover should not
       assertPopoverPanel({ state: PopoverState.InvisibleUnmounted })
       assertDialog({ state: DialogState.Visible })
-      assertActiveElement(document.getElementById('closeDialog'))
+      assertActiveElement(document.getElementById('dialog'))
 
       // Close the dialog from inside itself
       await click(document.getElementById('closeDialog'))
@@ -973,6 +973,8 @@ describe('Keyboard interactions', () => {
           attributes: { id: 'headlessui-dialog-1' },
         })
 
+        await click(document.getElementById('name'))
+
         // Try to close the dialog
         await press(Keys.Escape)
 
@@ -1071,6 +1073,7 @@ describe('Keyboard interactions', () => {
         })
 
         // Verify that the input field is focused
+        await press(Keys.Tab)
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
@@ -1121,6 +1124,7 @@ describe('Keyboard interactions', () => {
         })
 
         // Verify that the input field is focused
+        await press(shift(Keys.Tab))
         assertActiveElement(document.getElementById('a'))
 
         // Verify that we stay within the Dialog
@@ -1528,7 +1532,7 @@ describe('Mouse interactions', () => {
       assertActiveElement(document.querySelector('[data-lib]'))
 
       // This should only have been called once (when opening the Dialog)
-      expect(handleFocus).toHaveBeenCalledTimes(1)
+      expect(handleFocus).toHaveBeenCalledTimes(0)
 
       // Verify the dialog is still open
       assertDialog({ state: DialogState.Visible })
@@ -1877,6 +1881,7 @@ describe('Nesting', () => {
       expect(getDialogs()).toHaveLength(1)
 
       // Verify that the `Open 2 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 2 a'))
 
       // Verify that we can tab around
@@ -1898,6 +1903,7 @@ describe('Nesting', () => {
       expect(getDialogs()).toHaveLength(2)
 
       // Verify that the `Open 3 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 3 a'))
 
       // Verify that we can tab around
@@ -1937,6 +1943,7 @@ describe('Nesting', () => {
       await click(getByText('Open 2 b'))
 
       // Verify that the `Open 3 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 3 a'))
 
       // Verify that we can tab around
@@ -1958,6 +1965,7 @@ describe('Nesting', () => {
       await click(getByText('Open 3 c'))
 
       // Verify that the `Open 4 a` has focus
+      await press(Keys.Tab)
       assertActiveElement(getByText('Open 4 a'))
 
       // Verify that we can tab around

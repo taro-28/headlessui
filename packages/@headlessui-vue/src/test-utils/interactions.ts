@@ -440,12 +440,12 @@ export async function mouseDrag(
 
 function focusNext(event: Partial<KeyboardEvent>) {
   let direction = event.shiftKey ? -1 : +1
-  let focusableElements = getFocusableElements()
-  let total = focusableElements.length
+  let tabbableElements = getTabbableElements()
+  let total = tabbableElements.length
 
   function innerFocusNext(offset = 0): Element {
-    let currentIdx = focusableElements.indexOf(document.activeElement as HTMLElement)
-    let next = focusableElements[(currentIdx + total + direction + offset) % total] as HTMLElement
+    let currentIdx = tabbableElements.indexOf(document.activeElement as HTMLElement)
+    let next = tabbableElements[(currentIdx + total + direction + offset) % total] as HTMLElement
 
     if (next) next?.focus({ preventScroll: true })
 
@@ -458,7 +458,7 @@ function focusNext(event: Partial<KeyboardEvent>) {
 
 // Credit:
 //  - https://stackoverflow.com/a/30753870
-let focusableSelector = [
+let _focusableSelector = [
   '[contentEditable=true]',
   '[tabindex]',
   'a[href]',
@@ -468,18 +468,22 @@ let focusableSelector = [
   'input:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',
-]
-  .map(
-    process.env.NODE_ENV === 'test'
-      ? // TODO: Remove this once JSDOM fixes the issue where an element that is
-        // "hidden" can be the document.activeElement, because this is not possible
-        // in real browsers.
-        (selector) => `${selector}:not([tabindex='-1']):not([style*='display: none'])`
-      : (selector) => `${selector}:not([tabindex='-1'])`
-  )
+].map(
+  process.env.NODE_ENV === 'test'
+    ? // TODO: Remove this once JSDOM fixes the issue where an element that is
+      // "hidden" can be the document.activeElement, because this is not possible
+      // in real browsers.
+      (selector) => `${selector}:not([style*='display: none'])`
+    : (selector) => `${selector}`
+)
+
+let focusableSelector = _focusableSelector.join(',')
+
+let tabbableSelector = _focusableSelector
+  .map((selector) => `${selector}:not([tabindex='-1'])`)
   .join(',')
 
-function getFocusableElements(container = document.body) {
+function getTabbableElements(container = document.body) {
   if (!container) return []
-  return Array.from(container.querySelectorAll(focusableSelector))
+  return Array.from(container.querySelectorAll(tabbableSelector))
 }

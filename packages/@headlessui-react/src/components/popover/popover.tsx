@@ -360,7 +360,7 @@ function PopoverFn<TTag extends ElementType = typeof DEFAULT_POPOVER_TAG>(
     (event, target) => {
       dispatch({ type: ActionTypes.ClosePopover })
 
-      if (!isFocusableElement(target, FocusableMode.Loose)) {
+      if (!isFocusableElement(target, FocusableMode.Loose, { includeNegativeTabIndex: true })) {
         event.preventDefault()
         button?.focus()
       }

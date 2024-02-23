@@ -5,7 +5,7 @@ import { getOwnerDocument } from './owner'
 
 // Credit:
 //  - https://stackoverflow.com/a/30753870
-let focusableSelector = [
+let _focusableSelector = [
   '[contentEditable=true]',
   '[tabindex]',
   'a[href]',
@@ -15,15 +15,19 @@ let focusableSelector = [
   'input:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',
-]
-  .map(
-    process.env.NODE_ENV === 'test'
-      ? // TODO: Remove this once JSDOM fixes the issue where an element that is
-        // "hidden" can be the document.activeElement, because this is not possible
-        // in real browsers.
-        (selector) => `${selector}:not([tabindex='-1']):not([style*='display: none'])`
-      : (selector) => `${selector}:not([tabindex='-1'])`
-  )
+].map(
+  process.env.NODE_ENV === 'test'
+    ? // TODO: Remove this once JSDOM fixes the issue where an element that is
+      // "hidden" can be the document.activeElement, because this is not possible
+      // in real browsers.
+      (selector) => `${selector}:not([style*='display: none'])`
+    : (selector) => `${selector}`
+)
+
+let focusableSelector = _focusableSelector.join(',')
+
+let tabbableSelector = _focusableSelector
+  .map((selector) => `${selector}:not([tabindex='-1'])`)
   .join(',')
 
 let autoFocusableSelector = [
@@ -35,8 +39,8 @@ let autoFocusableSelector = [
       ? // TODO: Remove this once JSDOM fixes the issue where an element that is
         // "hidden" can be the document.activeElement, because this is not possible
         // in real browsers.
-        (selector) => `${selector}:not([tabindex='-1']):not([style*='display: none'])`
-      : (selector) => `${selector}:not([tabindex='-1'])`
+        (selector) => `${selector}:not([style*='display: none'])`
+      : (selector) => `${selector}`
   )
   .join(',')
 
@@ -82,9 +86,16 @@ enum Direction {
   Next = 1,
 }
 
-export function getFocusableElements(container: HTMLElement | null = document.body) {
+export function getFocusableElements(
+  container: HTMLElement | null = document.body,
+  includeNegativeTabIndex = false
+) {
   if (container == null) return []
-  return Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).sort(
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      includeNegativeTabIndex ? focusableSelector : tabbableSelector
+    )
+  ).sort(
     // We want to move `tabIndex={0}` to the end of the list, this is what the browser does as well.
     (a, z) =>
       Math.sign((a.tabIndex || Number.MAX_SAFE_INTEGER) - (z.tabIndex || Number.MAX_SAFE_INTEGER))
@@ -108,21 +119,33 @@ export enum FocusableMode {
   Loose,
 }
 
+export enum TabbableMode {
+  /** The element itself must be tabbable. */
+  Strict,
+
+  /** The element should be inside of a tabbable element. */
+  Loose,
+}
+
+// OK
 export function isFocusableElement(
   element: HTMLElement,
-  mode: FocusableMode = FocusableMode.Strict
+  mode: FocusableMode = FocusableMode.Strict,
+  { includeNegativeTabIndex }: Partial<{ includeNegativeTabIndex: boolean }> = {
+    includeNegativeTabIndex: false,
+  }
 ) {
   if (element === getOwnerDocument(element)?.body) return false
 
   return match(mode, {
     [FocusableMode.Strict]() {
-      return element.matches(focusableSelector)
+      return element.matches(includeNegativeTabIndex ? focusableSelector : tabbableSelector)
     },
     [FocusableMode.Loose]() {
       let next: HTMLElement | null = element
 
       while (next !== null) {
-        if (next.matches(focusableSelector)) return true
+        if (next.matches(tabbableSelector)) return true
         next = next.parentElement
       }
 
@@ -131,6 +154,7 @@ export function isFocusableElement(
   })
 }
 
+// focusで正しい
 export function restoreFocusIfNecessary(element: HTMLElement | null) {
   let ownerDocument = getOwnerDocument(element)
   disposables().nextFrame(() => {
@@ -225,10 +249,12 @@ export function focusIn(
     sorted = true,
     relativeTo = null,
     skipElements = [],
+    includeNegativeTabIndexElements = false,
   }: Partial<{
     sorted: boolean
     relativeTo: HTMLElement | null
     skipElements: (HTMLElement | MutableRefObject<HTMLElement | null>)[]
+    includeNegativeTabIndexElements: boolean
   }> = {}
 ) {
   let ownerDocument = Array.isArray(container)
@@ -243,7 +269,7 @@ export function focusIn(
       : container
     : focus & Focus.AutoFocus
       ? getAutoFocusableElements(container)
-      : getFocusableElements(container)
+      : getFocusableElements(container, includeNegativeTabIndexElements)
 
   if (skipElements.length > 0 && elements.length > 1) {
     elements = elements.filter(

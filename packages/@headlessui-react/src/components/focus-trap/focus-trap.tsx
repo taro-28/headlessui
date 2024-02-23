@@ -357,13 +357,21 @@ function useInitialFocus(
       } else {
         if (features & FocusTrapFeatures.AutoFocus) {
           // Try to focus the first focusable element with `Focus.AutoFocus` feature enabled
-          if (focusIn(containerElement!, Focus.First | Focus.AutoFocus) !== FocusResult.Error) {
+          if (
+            focusIn(containerElement!, Focus.First | Focus.AutoFocus, {
+              includeNegativeTabIndexElements: true,
+            }) !== FocusResult.Error
+          ) {
             return // Worked, bail
           }
         }
 
         // Try to focus the first focusable element.
-        else if (focusIn(containerElement!, Focus.First) !== FocusResult.Error) {
+        else if (
+          focusIn(containerElement!, Focus.First, {
+            includeNegativeTabIndexElements: true,
+          }) !== FocusResult.Error
+        ) {
           return // Worked, bail
         }
 
